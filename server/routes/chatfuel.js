@@ -50,8 +50,6 @@ router.post('/calories', function(req, res) {
 	const size = req.body['height'];
 	const gender = req.body['gender'];
 
-	usersController.initInfos(messengerid, gender, age, weight, size, activity);
-
 	const calories_limit = utils.calculateCalories(
 		gender,
 		size,
@@ -60,13 +58,27 @@ router.post('/calories', function(req, res) {
 		activity
 	);
 
-	res.json({
-		set_attributes: {
-			calories_limit: calories_limit,
-			loss_calories_limit: utils.calculateLooseCalories(calories_limit)
-		},
-		redirect_to_blocks: ['give_max_calories']
-	});
+	usersController.initInfos(messengerid, gender, age, weight, size, activity).then(update =>
+		weightRecordsController.create(update[1][0].id, weight)
+	).then(() => {
+		res.json({
+			set_attributes: {
+				calories_limit: calories_limit,
+				loss_calories_limit: utils.calculateLooseCalories(calories_limit)
+			},
+			redirect_to_blocks: ['give_max_calories']
+		});
+	}).catch(() => {
+		res.json({
+			set_attributes: {
+				calories_limit: calories_limit,
+				loss_calories_limit: utils.calculateLooseCalories(calories_limit)
+			},
+			redirect_to_blocks: ['give_max_calories']
+		});
+	})
+
+
 });
 
 //Get the last weight of the user
