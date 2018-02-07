@@ -172,7 +172,7 @@ router.get('/viewchart', function(req, res) {
           "buttons": [
             {
               "type": "web_url",
-              "url": `http://chefclub.ngrok.io/weight/${messengerid}`,
+              "url": `${config.get('client_url')}weight/${messengerid}`,
               "title": "Mon poids 📉"
             }
           ]
