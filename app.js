@@ -9,8 +9,6 @@ const apiRouter = require('./server/routes').api;
 const cloudinary = require('cloudinary');
 const config = require('config');
 
-//Staging
-
 cloudinary.config({
 	cloud_name: config.get('cloudinary.cloud_name'),
 	api_key: config.get('cloudinary.api_key'),
