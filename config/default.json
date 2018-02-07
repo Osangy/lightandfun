@@ -5,5 +5,6 @@
 		"api_secret": "tVMVxXS85quA3LNgTdLGjCLbPLE",
 		"env_variable":
 			"cloudinary://747746245199298:tVMVxXS85quA3LNgTdLGjCLbPLE@dil9tlpjt/"
-	}
+	},
+	"client_url" : "https://chefclub.ngrok.io/"
 }
