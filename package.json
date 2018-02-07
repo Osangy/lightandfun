@@ -1,16 +1,29 @@
 {
-  "name": "chatfuel-test",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "body-parser": "^1.18.2",
-    "dotenv": "^4.0.0",
-    "express": "^4.16.2"
-  }
+	"name": "chatfuel-test",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"start:dev": "nodemon ./bin/www",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "",
+	"license": "ISC",
+	"dependencies": {
+		"body-parser": "^1.18.2",
+		"cloudinary": "^1.9.1",
+		"config": "^1.29.2",
+		"dotenv": "^4.0.0",
+		"emoji-strip": "^1.0.1",
+		"express": "^4.16.2",
+		"lodash": "^4.17.4",
+		"moment": "^2.20.1",
+		"morgan": "^1.9.0",
+		"pg": "^6.4.2",
+		"pg-hstore": "^2.3.2",
+		"sequelize": "^4.32.2"
+	},
+	"devDependencies": {
+		"nodemon": "^1.14.11"
+	}
 }
