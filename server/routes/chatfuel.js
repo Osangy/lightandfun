@@ -100,7 +100,12 @@ router.post('/lastweight', function(req, res) {
 		.then(() => usersController.updateWeight(messengerid, newWeightFloat))
 		.then(() => {
 			let weight_dif;
-			if (newWeightFloat > previousWeight) {
+			if(!previousWeight){
+				res.json({
+					redirect_to_blocks: ['first_weight_reaction']
+				});
+			}
+			else if (newWeightFloat > previousWeight) {
 				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
 				res.json({
 					set_attributes: {
