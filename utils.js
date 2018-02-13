@@ -67,8 +67,30 @@ function enumActivity(activity) {
 	}
 }
 
+//Use De Creff formula : https://www.calculersonimc.fr/autres-calculs/poids-ideal-creff.html
+function calculateIBM(height, age, frame){
+	let ibm = (height - 100 + (age/10)) * 0.9;
+
+	switch (frame.toLowerCase()) {
+		case 'mince':
+			ibm = ibm * 0.9;
+			break;
+		case 'normale':
+			ibm = ibm;
+			break;
+		case 'large':
+			ibm = ibm * 1.1;
+			break;
+		default:
+			ibm = ibm;
+	}
+
+	return Math.round(ibm);
+}
+
 module.exports = {
 	calculateCalories,
 	calculateLooseCalories,
-	enumActivity
+	enumActivity,
+	calculateIBM
 };

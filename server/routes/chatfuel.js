@@ -159,6 +159,51 @@ router.post('/lastphoto', function(req, res) {
 	});
 });
 
+//Calculate ideal weight of the user depending of its height, its sex and its frame
+router.post('/frame', function(req, res) {
+	console.log('frame');
+
+	const messengerid = req.body['messenger user id'];
+	const frame = req.body['frame'];
+	const size = req.body['size'];
+	const age = req.body['age'];
+	const weight = req.body['weight'];
+
+		usersController.get(messengerid).then(user => {
+			let ibm;
+			if(age && size && weight){
+				user.size = size;
+				user.age = age;
+				user.weight = weight;
+				user.save();
+			}
+
+			ibm = utils.calculateIBM(user.size, user.age, frame);
+
+			//User needs to loose some weight
+			if(ibm < user.weight){
+				res.json({
+					set_attributes: {
+						weight_goal: ibm,
+						toLooseWeight: (user.weight * 10 - ibm * 10) / 10,
+					},
+					redirect_to_blocks: ['weight_goal_loose']
+				});
+			}
+			//User does not need to loose some weight
+			else{
+				res.json({
+					set_attributes: {
+						weight_goal: ibm
+					},
+					redirect_to_blocks: ['weight_goal_no_need']
+				})
+			}
+
+
+		}).catch(error => res.status(400).send(error.message))
+});
+
 
 //Give the user a link to see his weight chart
 router.get('/viewchart', function(req, res) {
