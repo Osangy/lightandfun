@@ -25,4 +25,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use('/chatfuel', chatfuelRouter);
 app.use('/api', apiRouter);
 
+app.get('/', (req, res) => {
+	res.send('Ok');
+})
+
 module.exports = app;
