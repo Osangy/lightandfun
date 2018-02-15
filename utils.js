@@ -38,7 +38,8 @@ function calculateCalories(gender, size, weight, age, activity) {
 //How many calories if the user wants to loose some weight
 function calculateLooseCalories(calories) {
 	//Mifflin - St Jeor Formula : https://www.freedieting.com/calorie-needs
-	const looseCalories = calories * 0.8;
+	//const looseCalories = calories * 0.8;
+	const looseCalories = calories - 500;
 
 	return Math.round(looseCalories);
 }
