@@ -48,7 +48,8 @@ router.post('/calories', function(req, res) {
 	const age = req.body['age'];
 	const activity = req.body['activity_type'];
 	const size = req.body['height'];
-	const gender = req.body['gender'];
+	let gender = req.body['gender'];
+	if(!gender) gender = 'female';
 
 	const calories_limit = utils.calculateCalories(
 		gender,
