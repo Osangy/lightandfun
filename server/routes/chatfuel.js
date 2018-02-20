@@ -6,6 +6,8 @@ const weightRecordsController = require('../controllers').weightRecords;
 const utils = require('../../utils');
 const cloudinary = require('cloudinary');
 const config = require('config');
+const analytics = require('../analytics');
+const moment = require('moment');
 
 // middleware that is specific to this router
 // router.use(function timeLog(req, res, next) {
@@ -17,13 +19,22 @@ const config = require('config');
 router.post('/welcome', function(req, res) {
 	console.log('welcome');
 
-	const messengerId = req.body['messenger user id'];
-	const firstName = req.body['first name'];
-	const lastName = req.body['last name'];
+	const messenger_id = req.body['messenger user id'];
+	const first_name = req.body['first name'];
+	const last_name = req.body['last name'];
 
 	usersController
-		.create(messengerId, firstName, lastName)
-		.then(() => res.json({}))
+		.create(messenger_id, first_name, last_name)
+		.then(() => {
+			analytics.send({
+				messenger_id,
+				first_name,
+				last_name
+			},
+			'new_user',
+			{});
+			res.json({})
+		})
 		.catch(() => res.json({}));
 });
 
@@ -33,6 +44,16 @@ router.post('/weighttime', function(req, res) {
 
 	const messengerId = req.body['messenger user id'];
 	const weightTime = req.body['weight_time'];
+
+	//Send data to amplitude
+	analytics.send({
+		messenger_id: messengerId,
+		weight_time: weightTime
+	},
+	'set_weight_time',
+	{
+		weight_time: weightTime
+	});
 
 	usersController.setWeightTime(messengerId, weightTime);
 
@@ -62,6 +83,20 @@ router.post('/calories', function(req, res) {
 	usersController.initInfos(messengerid, gender, age, weight, size, activity).then(update =>
 		weightRecordsController.create(update[1][0].id, weight)
 	).then(() => {
+		//Send data to amplitude
+		analytics.send({
+			messenger_id: messengerid,
+			weight,
+			age,
+			activity,
+			size,
+			gender
+		},
+		'calculate_calories',
+		{
+			calories_limit
+		});
+
 		res.json({
 			set_attributes: {
 				calories_limit: calories_limit,
@@ -100,35 +135,50 @@ router.post('/lastweight', function(req, res) {
 		})
 		.then(() => usersController.updateWeight(messengerid, newWeightFloat))
 		.then(() => {
-			let weight_dif;
+
+
+			let weight_dif = 0;;
+			let next_block = 'flat_weekly';
+			evolution = 'flat';
 			if(!previousWeight){
-				res.json({
-					redirect_to_blocks: ['first_weight_reaction']
-				});
+				next_block = 'first_weight_reaction';
+				evolution = 'first';
 			}
 			else if (newWeightFloat > previousWeight) {
+				next_block = 'encouragement_weekly';
 				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
-				res.json({
-					set_attributes: {
-						weight_dif,
-						previousWeight
-					},
-					redirect_to_blocks: ['encouragement_weekly']
-				});
+				evolution = 'take_weight';
 			} else if (newWeightFloat < previousWeight) {
 				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
-				res.json({
-					set_attributes: {
-						weight_dif
-					},
-					redirect_to_blocks: ['happy_weekly']
-				});
+				next_block = 'happy_weekly';
+				evolution = 'lose_weight'
 			}
 			else {
-				res.json({
-					redirect_to_blocks: ['flat_weekly']
-				});
+				weight_dif = 0;
+				next_block = 'flat_weekly';
 			}
+
+			//Track the event
+			analytics.send({
+				messenger_id: messengerid,
+				weight: newWeightFloat,
+				previous_weight: previousWeight,
+				last_weight_date: moment()
+			},
+			'new_weight',
+			{
+				weight: newWeight,
+				weight_evolution: evolution
+			});
+
+			//Send response to Chatfuel
+			res.json({
+				set_attributes: {
+					weight_dif,
+					previousWeight
+				},
+				redirect_to_blocks: [next_block]
+			});
 		})
 		.catch(err => {
 			console.error(err.message);
@@ -148,6 +198,14 @@ router.post('/lastphoto', function(req, res) {
 			console.error(error.message);
 			res.json({});
 		} else {
+
+			//Send data to amplitude
+			analytics.send({
+				messenger_id: messengerid,
+			},
+			'upload_photo',
+			{});
+
 			usersController
 				.get(messengerid)
 				.then(user =>
@@ -184,27 +242,44 @@ router.post('/frame', function(req, res) {
 				user.save();
 			}
 
+			//calculate ideal weight
 			ibm = utils.calculateIBM(user.size, user.age, frame);
 
 			//User needs to loose some weight
+			let toLooseWeight;
+			let nextBlock;
 			if(ibm < user.weight){
-				res.json({
-					set_attributes: {
-						weight_goal: ibm,
-						toLooseWeight: (user.weight * 10 - ibm * 10) / 10,
-					},
-					redirect_to_blocks: ['weight_goal_loose']
-				});
+				toLooseWeight = (user.weight * 10 - ibm * 10) / 10;
+				nextBlock = 'weight_goal_loose';
 			}
 			//User does not need to loose some weight
 			else{
-				res.json({
-					set_attributes: {
-						weight_goal: ibm
-					},
-					redirect_to_blocks: ['weight_goal_no_need']
-				})
+				nextBlock = 'weight_goal_no_need';
 			}
+
+			//Send data to amplitude
+			analytics.send({
+				messenger_id: messengerid,
+				frame,
+				size,
+				age,
+				weight,
+				ideal_weight: ibm
+			},
+			'calculate_ideal_weight',
+			{
+				ideal_weight: ibm,
+				toLooseWeight
+			});
+
+			//Send infos to chatfuel
+			res.json({
+				set_attributes: {
+					weight_goal: ibm,
+					toLooseWeight
+				},
+				redirect_to_blocks: [nextBlock]
+			})
 
 
 		}).catch(error => res.status(400).send(error.message))
@@ -216,6 +291,13 @@ router.get('/viewchart', function(req, res) {
 	console.log('viewchart');
 
 	const messengerid = req.query['messenger user id'];
+
+	//Send data to amplitude
+	analytics.send({
+		messenger_id: messengerid
+	},
+	'view_evolution_chart',
+	{});
 
 	res.json({
 		"messages": [
