@@ -115,13 +115,18 @@ router.post('/lastweight', function(req, res) {
 					},
 					redirect_to_blocks: ['encouragement_weekly']
 				});
-			} else {
+			} else if (newWeightFloat < previousWeight) {
 				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
 				res.json({
 					set_attributes: {
 						weight_dif
 					},
 					redirect_to_blocks: ['happy_weekly']
+				});
+			}
+			else {
+				res.json({
+					redirect_to_blocks: ['flat_weekly']
 				});
 			}
 		})
