@@ -28,6 +28,10 @@ module.exports = (sequelize, DataTypes) => {
 		},
 		activity: {
 			type: DataTypes.INTEGER
+		},
+		weekly_sub: {
+			type: DataTypes.BOOLEAN,
+			default: false
 		}
 	});
 

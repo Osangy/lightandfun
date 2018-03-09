@@ -61,6 +61,17 @@ module.exports = {
 		);
 	},
 
+	subWeekly(messengerid) {
+		return User.update(
+			{
+				weekly_sub: true
+			},
+			{
+				where: { messengerid }
+			}
+		)
+	},
+
 	//
 	addSize(messengerid, size) {
 		return User.update(

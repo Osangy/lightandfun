@@ -22,6 +22,7 @@ router.post('/welcome', function(req, res) {
 	const messenger_id = req.body['messenger user id'];
 	const first_name = req.body['first name'];
 	const last_name = req.body['last name'];
+	const ref = req.body['ref'];
 
 	usersController
 		.create(messenger_id, first_name, last_name)
@@ -29,7 +30,8 @@ router.post('/welcome', function(req, res) {
 			analytics.send({
 				messenger_id,
 				first_name,
-				last_name
+				last_name,
+				ref
 			},
 			'new_user',
 			{});
@@ -319,6 +321,48 @@ router.get('/viewchart', function(req, res) {
     }
   ]
 	})
+});
+
+//The user says if he wants or not get the weekly best recipe
+router.get('/bestweekly', function(req, res) {
+	console.log('answer to weekly sub');
+
+	const messengerid = req.query['messenger user id'];
+	const want_weekly = req.query['want_weekly'];
+
+	analytics.send({
+		messenger_id: messengerid,
+		best_weekly_sub : want_weekly
+	},
+	'subscribe_best_weekly',
+	{
+		want_weekly
+	});
+
+	if(want_weekly == 'yes'){
+		usersController.subWeekly(messengerid).then(() => res.json({})).catch(err => {
+			console.error(err.message);
+			res.json({})
+		});
+	}
+	else {
+		res.json({});
+	}
+});
+
+//The user clicks to see the recipe card of the best recipe of the week
+router.get('/seerecipecard', function(req, res) {
+	console.log('see recipe card');
+
+	const messengerid = req.query['messenger user id'];
+
+	analytics.send({
+		messenger_id: messengerid,
+	},
+	'see_recipe_card',
+	{});
+
+	res.json({});
 });
 
 module.exports = router;
