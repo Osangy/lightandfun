@@ -15,6 +15,31 @@ const moment = require('moment');
 // 	next();
 // });
 
+// //First time the user arrives
+// router.post('/welcome', function(req, res) {
+// 	console.log('welcome');
+//
+// 	const messenger_id = req.body['messenger user id'];
+// 	const first_name = req.body['first name'];
+// 	const last_name = req.body['last name'];
+// 	const ref = req.body['ref'];
+//
+// 	usersController
+// 		.create(messenger_id, first_name, last_name)
+// 		.then(() => {
+// 			analytics.send({
+// 				messenger_id,
+// 				first_name,
+// 				last_name,
+// 				ref
+// 			},
+// 			'new_user',
+// 			{});
+// 			res.json({})
+// 		})
+// 		.catch(() => res.json({}));
+// });
+
 //First time the user arrives
 router.post('/welcome', function(req, res) {
 	console.log('welcome');
@@ -23,18 +48,43 @@ router.post('/welcome', function(req, res) {
 	const first_name = req.body['first name'];
 	const last_name = req.body['last name'];
 	const ref = req.body['ref'];
+	const ref_card = req.body['ref_card'];
 
 	usersController
 		.create(messenger_id, first_name, last_name)
 		.then(() => {
-			analytics.send({
-				messenger_id,
-				first_name,
-				last_name,
-				ref
-			},
-			'new_user',
-			{});
+			//If the user arrives after an automatic message after a comment on a post
+			if(ref_card){
+				analytics.send({
+					messenger_id,
+					first_name,
+					last_name,
+					ref,
+					ref_card,
+					from_comment: true
+				},
+				'new_user',
+				{
+					ref_card,
+					ref,
+					from_comment: true
+				});
+			}
+			else{
+				analytics.send({
+					messenger_id,
+					first_name,
+					last_name,
+					ref,
+					from_comment: false
+				},
+				'new_user',
+				{
+					from_comment: false,
+					ref
+				});
+			}
+
 			res.json({})
 		})
 		.catch(() => res.json({}));
