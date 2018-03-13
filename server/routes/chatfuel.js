@@ -415,4 +415,19 @@ router.get('/seerecipecard', function(req, res) {
 	res.json({});
 });
 
+//The user needs to start again a block because he didn't press a button but entered free text
+router.get('/startagain', function(req, res) {
+	console.log('Start again');
+
+	const messengerid = req.query['messenger user id'];
+	const block_name = req.query['block_name'];
+
+	console.log('Last block visited :\n');
+	console.log(block_name);
+
+	res.json({
+		redirect_to_blocks: [block_name]
+	});
+});
+
 module.exports = router;
