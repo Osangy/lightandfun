@@ -430,4 +430,27 @@ router.get('/startagain', function(req, res) {
 	});
 });
 
+
+//The user needs to start again a block because he didn't press a button but entered free text
+router.get('/satisfaction', function(req, res) {
+	console.log('Satisfaction');
+
+	const messengerid = req.query['messenger user id'];
+	const user_satisfaction = req.query['user_satisfaction']
+	const satisfaction_type = req.query['satisfaction_type']
+
+	analytics.send({
+		messenger_id: messengerid,
+		user_satisfaction,
+		satisfaction_type
+	},
+	'satisfaction',
+	{
+		user_satisfaction,
+		satisfaction_type
+	});
+
+	res.json({});
+});
+
 module.exports = router;
