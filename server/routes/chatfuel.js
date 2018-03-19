@@ -187,6 +187,8 @@ router.post('/lastweight', function(req, res) {
 
 	const newWeightFloat = parseFloat(_.replace(newWeight, ',', '.'));
 	let previousWeight;
+	let weight_dif = 0;
+	let next_block = 'flat_weekly';
 
 	usersController
 		.get(messengerid)
@@ -198,9 +200,7 @@ router.post('/lastweight', function(req, res) {
 		.then(() => {
 
 
-			let weight_dif = 0;;
-			let next_block = 'flat_weekly';
-			evolution = 'flat';
+			let evolution = 'flat';
 			if(!previousWeight){
 				next_block = 'first_weight_reaction';
 				evolution = 'first';
@@ -220,7 +220,7 @@ router.post('/lastweight', function(req, res) {
 			}
 
 			//Track the event
-			analytics.send({
+			return analytics.send({
 				messenger_id: messengerid,
 				weight: newWeightFloat,
 				previous_weight: previousWeight,
@@ -232,6 +232,11 @@ router.post('/lastweight', function(req, res) {
 				weight_evolution: evolution
 			});
 
+		})
+		.then(() =>
+			analytics.incrementWeightTime(messengerid)
+		)
+		.then(() => {
 			//Send response to Chatfuel
 			res.json({
 				set_attributes: {

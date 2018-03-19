@@ -1,5 +1,6 @@
 const axios = require('axios');
 const Promise = require('bluebird');
+const moment = require('moment');
 
 
 
@@ -15,6 +16,35 @@ exports.send = (user_object, event_type, event) => {
           event_type,
           event_properties: event,
           user_properties: user_object
+        }
+      }
+    })
+    .then((response) => {
+      resolve();
+    })
+    .catch((error) => {
+      console.error(error);
+      reject(error);
+    });
+
+  })
+
+}
+
+exports.incrementWeightTime = (messengerid) => {
+
+  return new Promise((resolve, reject) => {
+
+    axios.get('https://api.amplitude.com/identify', {
+      params: {
+        api_key: process.env.AMPLITUDE_API_KEY,
+        identification: {
+          user_id: messengerid,
+          user_properties: {
+            "$add": {
+              "weight_number_time": 1
+            }
+          }
         }
       }
     })
