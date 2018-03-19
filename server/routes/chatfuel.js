@@ -50,6 +50,7 @@ router.post('/welcome', function(req, res) {
 	const ref = req.body['ref'];
 	const ref_card = req.body['ref_card'];
 	const source = req.body['source'];
+	console.log(source);
 
 	usersController
 		.create(messenger_id, first_name, last_name)
