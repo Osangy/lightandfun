@@ -458,4 +458,19 @@ router.get('/satisfaction', function(req, res) {
 	res.json({});
 });
 
+//The user needs to start again a block because he didn't press a button but entered free text
+router.get('/askshare', function(req, res) {
+	console.log('Ask Share');
+
+	const messengerid = req.query['messenger user id'];
+
+	analytics.send({
+		messenger_id: messengerid
+	},
+	'ask_share',
+	{});
+
+	res.json({});
+});
+
 module.exports = router;
