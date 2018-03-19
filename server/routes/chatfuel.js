@@ -49,6 +49,7 @@ router.post('/welcome', function(req, res) {
 	const last_name = req.body['last name'];
 	const ref = req.body['ref'];
 	const ref_card = req.body['ref_card'];
+	const source = req.body['source'];
 
 	usersController
 		.create(messenger_id, first_name, last_name)
@@ -61,12 +62,14 @@ router.post('/welcome', function(req, res) {
 					last_name,
 					ref,
 					ref_card,
+					source,
 					from_comment: true
 				},
 				'new_user',
 				{
 					ref_card,
 					ref,
+					source,
 					from_comment: true
 				});
 			}
@@ -76,12 +79,14 @@ router.post('/welcome', function(req, res) {
 					first_name,
 					last_name,
 					ref,
+					source,
 					from_comment: false
 				},
 				'new_user',
 				{
 					from_comment: false,
-					ref
+					ref,
+					source
 				});
 			}
 
