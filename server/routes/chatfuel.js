@@ -47,10 +47,11 @@ router.post('/welcome', function(req, res) {
 	const messenger_id = req.body['messenger user id'];
 	const first_name = req.body['first name'];
 	const last_name = req.body['last name'];
+	const gender = req.body['gender'];
 	const ref = req.body['ref'];
 	const ref_card = req.body['ref_card'];
 	const source = req.body['source'];
-	console.log(source);
+	console.log(gender);
 
 	usersController
 		.create(messenger_id, first_name, last_name)
@@ -64,6 +65,7 @@ router.post('/welcome', function(req, res) {
 					ref,
 					ref_card,
 					source,
+					gender,
 					from_comment: true
 				},
 				'new_user',
@@ -81,6 +83,7 @@ router.post('/welcome', function(req, res) {
 					last_name,
 					ref,
 					source,
+					gender,
 					from_comment: false
 				},
 				'new_user',
