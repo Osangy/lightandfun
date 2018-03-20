@@ -524,6 +524,15 @@ router.get('/seevideo', (req, res) => {
 	let recipe;
 	let indexRecipe = _.findIndex(recipesData.recipes, (o) =>  { return o.id == recipe_id; });
 
+
+	analytics.send({
+		messenger_id: messengerid,
+	},
+	'see_list_video',
+	{
+		recipe_id
+	});
+
 	res.json({
 		"messages": [
     {
@@ -554,7 +563,13 @@ router.get('/seelistcard', (req, res) => {
 
 	let indexRecipe = _.findIndex(recipesData.recipes, (o) =>  { return o.id == recipe_id; });
 
-	console.log(recipesData.recipes[indexRecipe].recipecard);
+	analytics.send({
+		messenger_id: messengerid,
+	},
+	'see_list_recipe_card',
+	{
+		recipe_id
+	});
 
 	res.json({
 		"messages": [
