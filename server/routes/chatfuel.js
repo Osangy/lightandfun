@@ -8,6 +8,14 @@ const cloudinary = require('cloudinary');
 const config = require('config');
 const analytics = require('../analytics');
 const moment = require('moment');
+const toml = require('toml');
+var concat = require('concat-stream');
+var fs = require('fs');
+let recipesData;
+
+fs.createReadStream('./recipes.toml', 'utf8').pipe(concat(function(data) {
+  recipesData = toml.parse(data);
+}));
 
 // middleware that is specific to this router
 // router.use(function timeLog(req, res, next) {
@@ -480,6 +488,89 @@ router.get('/askshare', function(req, res) {
 	{});
 
 	res.json({});
+});
+
+//The user needs to start again a block because he didn't press a button but entered free text
+router.get('/seerecipes', function(req, res) {
+	const messengerid = req.query['messenger user id'];
+
+	res.json({
+		"messages": [
+    {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "button",
+          "text": "Retrouve toutes les recettes Light and Fun en cliquant en dessous 👇",
+          "buttons": [
+            {
+              "type": "web_url",
+              "url": `${config.get('client_url')}recipes/${messengerid}`,
+              "title": "Toutes les recettes"
+            }
+          ]
+        }
+      }
+    }
+  ]
+	})
+});
+
+// When the user has clicked on 'Video' in the recipes list webview
+router.get('/seevideo', (req, res) => {
+	const messengerid = req.query['messenger user id'];
+	const recipe_id = req.query['recipe_want'];
+
+	let recipe;
+	let indexRecipe = _.findIndex(recipesData.recipes, (o) =>  { return o.id == recipe_id; });
+
+	res.json({
+		"messages": [
+    {
+      "attachment": {
+        "type": "template",
+        "payload": {
+          "template_type": "button",
+          "text": `Clique là dessous pour voir la video de ${recipesData.recipes[indexRecipe].title}`,
+          "buttons": [
+            {
+              "type": "web_url",
+              "url": `${recipesData.recipes[indexRecipe].video}`,
+              "title": "Voir la video 🍿"
+            }
+          ]
+        }
+      }
+    }
+  ]
+	})
+});
+
+// When the user has clicked on 'Fiche Recette' in the recipes list webview
+router.get('/seelistcard', (req, res) => {
+	console.log("see recipe card");
+	const messengerid = req.query['messenger user id'];
+	const recipe_id = req.query['recipe_want'];
+
+	let indexRecipe = _.findIndex(recipesData.recipes, (o) =>  { return o.id == recipe_id; });
+
+	console.log(recipesData.recipes[indexRecipe].recipecard);
+
+	res.json({
+		"messages": [
+		{
+			"text" : `Voilà la fiche recette de ${recipesData.recipes[indexRecipe].title}`
+		},
+    {
+      "attachment": {
+        "type": "image",
+        "payload": {
+          "url" : recipesData.recipes[indexRecipe].recipecard
+        }
+      }
+    }
+  ]
+	})
 });
 
 module.exports = router;

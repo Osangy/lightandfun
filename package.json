@@ -13,6 +13,7 @@
 		"axios": "^0.18.0",
 		"body-parser": "^1.18.2",
 		"cloudinary": "^1.9.1",
+		"concat-stream": "^1.6.1",
 		"config": "^1.29.2",
 		"dotenv": "^4.0.0",
 		"emoji-strip": "^1.0.1",
@@ -22,7 +23,9 @@
 		"morgan": "^1.9.0",
 		"pg": "^6.4.2",
 		"pg-hstore": "^2.3.2",
-		"sequelize": "^4.32.2"
+		"sequelize": "^4.32.2",
+		"toml": "^2.3.3",
+		"toml-require": "^1.1.0"
 	},
 	"devDependencies": {
 		"nodemon": "^1.14.11"

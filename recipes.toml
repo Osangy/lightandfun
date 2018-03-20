@@ -1,0 +1,41 @@
+[[recipes]]
+id = "poulet_arc_en_ciel"
+title = "Poulet arc-en-ciel 🐓🌈"
+subtitle = "Des couleurs et du goût 😋"
+video = "https://www.facebook.com/chefclublightandfun/videos/353013945166903/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521482471/012518_ROULE_POULET_LF_ezlfwv.jpg"
+
+[[recipes]]
+id = "quiche_patate_douce"
+title = "La quiche patate douce 🍠"
+subtitle = "Un régime à la douce 😊"
+video = "https://www.facebook.com/chefclublightandfun/videos/358379331297031/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521482716/011018_QUICHE_PATATE_DOUCE_LF_ceej3f.jpg"
+
+[[recipes]]
+id = "mousse_chocolat_bi_gout"
+title = "La mousse au chocolat bi-goût 🍫"
+subtitle = "Onctueux et très peu calorique :)"
+video = "https://www.facebook.com/chefclublightandfun/videos/365741530560811/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521483006/022318_MOUSSE_CHOCOLAT_EAU_LF_ix9tgg.jpg"
+
+[[recipes]]
+id = "terrine_petits_legumes"
+title = "Terrine aux petits légumes 🥦🥕🍆"
+subtitle = "Aussi légère que colorée"
+video = "https://www.facebook.com/chefclublightandfun/videos/366697307131900/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521483050/020618_TERRINE_TROIS_LEGUMES_LF_fsf7vz.jpg"
+
+[[recipes]]
+id = "chou_fleur_margherita"
+title = "Chou-fleur façon margherita 🍕"
+subtitle = "Tous les bons côtés de la pizza en plus léger :)"
+video = "https://www.facebook.com/chefclublightandfun/videos/369213040213660/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521483076/011118_PIZZA_CHOUFLEUR_LF_li3vhm.jpg"
+
+[[recipes]]
+id = "glace_flottante"
+title = "Glace flottante 🍦"
+subtitle = "Tellement légère qu’elle flotte"
+video = "https://www.facebook.com/chefclublightandfun/videos/369952870139677/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521483111/030618_GLACE_FLOTTANTE_LF_bfoago.jpg"
