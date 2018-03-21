@@ -39,3 +39,10 @@ title = "Glace flottante 🍦"
 subtitle = "Tellement légère qu’elle flotte"
 video = "https://www.facebook.com/chefclublightandfun/videos/369952870139677/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521483111/030618_GLACE_FLOTTANTE_LF_bfoago.jpg"
+
+[[recipes]]
+id = "terrine_six"
+title = "Terrine de légumes 6 en 1 🍆"
+subtitle = "Préparez 6 jours de régime avec 1 seule préparation :)"
+video = "https://www.facebook.com/chefclublightandfun/videos/371993229935641/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521625212/LF_TERRINE_SIX_e75jfe.png"

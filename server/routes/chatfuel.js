@@ -9,8 +9,8 @@ const config = require('config');
 const analytics = require('../analytics');
 const moment = require('moment');
 const toml = require('toml');
-var concat = require('concat-stream');
-var fs = require('fs');
+const concat = require('concat-stream');
+const fs = require('fs');
 let recipesData;
 
 fs.createReadStream('./recipes.toml', 'utf8').pipe(concat(function(data) {
