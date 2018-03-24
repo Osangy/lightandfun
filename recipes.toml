@@ -46,3 +46,10 @@ title = "Terrine de légumes 6 en 1 🍆"
 subtitle = "Préparez 6 jours de régime avec 1 seule préparation :)"
 video = "https://www.facebook.com/chefclublightandfun/videos/371993229935641/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521642303/022718_TERRINE_LE%CC%81GUMES_LF_xxddbs.jpg"
+
+[[recipes]]
+id = "muffins_legumes"
+title = "Muffins salés aux légumes !"
+subtitle = "Pour un apéro léger :)"
+video = "https://www.facebook.com/chefclublightandfun/videos/373152899819674/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521884520/LF_MUFFINS_LEGUMES_hmwof7.png"
