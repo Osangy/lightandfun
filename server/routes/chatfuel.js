@@ -196,15 +196,17 @@ router.post('/lastweight', function(req, res) {
 	const newWeightFloat = parseFloat(_.replace(newWeight, ',', '.'));
 	let previousWeight;
 	let weight_dif = 0;
+  let nb_weight = 0;
 	let next_block = 'flat_weekly';
 
 	usersController
 		.get(messengerid)
 		.then(user => {
 			previousWeight = user.weight;
+      nb_weight = user.nb_weight + 1;
 			return weightRecordsController.create(user.id, newWeightFloat);
 		})
-		.then(() => usersController.updateWeight(messengerid, newWeightFloat))
+		.then(() => usersController.updateWeight(messengerid, newWeightFloat, nb_weight))
 		.then(() => {
 
 

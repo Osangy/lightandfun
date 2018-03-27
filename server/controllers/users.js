@@ -49,10 +49,11 @@ module.exports = {
 		);
 	},
 
-	updateWeight(messengerid, weight) {
+	updateWeight(messengerid, weight, nb_weight) {
 		return User.update(
 			{
-				weight
+				weight,
+				nb_weight
 			},
 			{
 				where: { messengerid },

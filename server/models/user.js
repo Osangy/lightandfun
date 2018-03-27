@@ -32,6 +32,10 @@ module.exports = (sequelize, DataTypes) => {
 		weekly_sub: {
 			type: DataTypes.BOOLEAN,
 			default: false
+		},
+		nb_weight: {
+			type: DataTypes.INTEGER,
+			default: 0
 		}
 	});
 
