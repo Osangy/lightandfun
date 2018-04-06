@@ -17,36 +17,6 @@ fs.createReadStream('./recipes.toml', 'utf8').pipe(concat(function(data) {
   recipesData = toml.parse(data);
 }));
 
-// middleware that is specific to this router
-// router.use(function timeLog(req, res, next) {
-// 	console.log('Time: ', Date.now());
-// 	next();
-// });
-
-// //First time the user arrives
-// router.post('/welcome', function(req, res) {
-// 	console.log('welcome');
-//
-// 	const messenger_id = req.body['messenger user id'];
-// 	const first_name = req.body['first name'];
-// 	const last_name = req.body['last name'];
-// 	const ref = req.body['ref'];
-//
-// 	usersController
-// 		.create(messenger_id, first_name, last_name)
-// 		.then(() => {
-// 			analytics.send({
-// 				messenger_id,
-// 				first_name,
-// 				last_name,
-// 				ref
-// 			},
-// 			'new_user',
-// 			{});
-// 			res.json({})
-// 		})
-// 		.catch(() => res.json({}));
-// });
 
 //First time the user arrives
 router.post('/welcome', function(req, res) {
@@ -251,7 +221,8 @@ router.post('/lastweight', function(req, res) {
 			res.json({
 				set_attributes: {
 					weight_dif,
-					previousWeight
+					previousWeight,
+          nb_weight
 				},
 				redirect_to_blocks: [next_block]
 			});
