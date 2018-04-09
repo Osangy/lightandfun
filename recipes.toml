@@ -53,3 +53,10 @@ title = "Muffins salés aux légumes !"
 subtitle = "Pour un apéro léger :)"
 video = "https://www.facebook.com/chefclublightandfun/videos/373152899819674/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1521884520/LF_MUFFINS_LEGUMES_hmwof7.png"
+
+[[recipes]]
+id = "croc_brocoli"
+title = "Croc Brocoli 🥦"
+subtitle = "Au régime Monsieur ! ou Madame :)"
+video = "https://www.facebook.com/chefclublightandfun/videos/379997909135173/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1523287653/031218_CROC_BROC_LF_hboeq1.jpg"
