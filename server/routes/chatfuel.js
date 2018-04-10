@@ -338,6 +338,9 @@ router.get('/viewchart', function(req, res) {
 	console.log('viewchart');
 
 	const messengerid = req.query['messenger user id'];
+  let weightGoal = req.query['weight_goal'];
+
+  if(!weightGoal) weightGoal = 0;
 
 	//Send data to amplitude
 	analytics.send({
@@ -357,7 +360,7 @@ router.get('/viewchart', function(req, res) {
           "buttons": [
             {
               "type": "web_url",
-              "url": `${config.get('client_url')}weight/${messengerid}`,
+              "url": `${config.get('client_url')}weight/${messengerid}/goal/${weightGoal}`,
               "title": "Mon poids 📉"
             }
           ]
