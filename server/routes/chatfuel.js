@@ -564,4 +564,67 @@ router.get('/seelistcard', (req, res) => {
 	})
 });
 
+// When the user has clicked on 'Fiche Recette' in the recipes list webview
+router.get('/gif', (req, res) => {
+	console.log("see recipe card");
+	const messengerid = req.query['messenger user id'];
+	const gif_type = req.query['gif_type'];
+
+  const happy_gif = [
+    "https://media.giphy.com/media/MVDPX3gaKFPuo/giphy.gif",
+    "https://media.giphy.com/media/14udF3WUwwGMaA/giphy.gif",
+    "https://media.giphy.com/media/l4pTfx2qLszoacZRS/giphy.gif",
+    "https://media.giphy.com/media/y8Mz1yj13s3kI/giphy.gif",
+    "https://media.giphy.com/media/YJ5OlVLZ2QNl6/giphy.gif",
+    "https://media.giphy.com/media/6nuiJjOOQBBn2/giphy.gif",
+    "https://media.giphy.com/media/itDBteCsTFSVO/giphy.gif"
+  ];
+
+
+  const sad_gif = [
+    "https://media.giphy.com/media/itDBteCsTFSVO/giphy.gif",
+    "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif",
+    "https://media.giphy.com/media/9Y5BbDSkSTiY8/giphy.gif",
+    "https://media.giphy.com/media/bgDIgfQsgcXLi/giphy.gif",
+    "https://media.giphy.com/media/Hwq45iwTIUBGw/giphy.gif",
+    "https://media.giphy.com/media/7ksrNPoSjSryo/giphy.gif",
+  ];
+
+  const flat_gif = [
+    "https://media.giphy.com/media/NWg7M1VlT101W/giphy.gif",
+    "https://media.giphy.com/media/l0GRkpk8mcWhekrVC/giphy.gif",
+    "https://media.giphy.com/media/EhwFIP584mIBa/giphy.gif",
+    "https://media.giphy.com/media/EhwFIP584mIBa/giphy.gif",
+    "https://media.giphy.com/media/xT0BKEg3N7gFLBilLG/giphy.gif",
+    "https://media.giphy.com/media/3o6Ztfp1T1AukDGP4s/giphy.gif"
+  ]
+
+  let gif_to_send;
+  if(gif_type === 'happy'){
+    const random = Math.floor((Math.random() * happy_gif.length));
+    gif_to_send = happy_gif[random];
+  }
+  else if (gif_type === 'sad') {
+    const random = Math.floor((Math.random() * sad_gif.length));
+    gif_to_send = sad_gif[random];
+  }
+  else{
+    const random = Math.floor((Math.random() * flat_gif.length));
+    gif_to_send = flat_gif[random];
+  }
+
+	res.json({
+		"messages": [
+    {
+      "attachment": {
+        "type": "image",
+        "payload": {
+          "url" : gif_to_send
+        }
+      }
+    }
+  ]
+	})
+});
+
 module.exports = router;
