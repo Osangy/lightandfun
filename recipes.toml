@@ -62,8 +62,8 @@ video = "https://www.facebook.com/chefclublightandfun/videos/379997909135173/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1523287653/031218_CROC_BROC_LF_hboeq1.jpg"
 
 [[recipes]]
-id = "muffin_courgette"
-title = "Muffin Courgette 🥒"
-subtitle = "Au régime Monsieur ! ou Madame :)"
-video = "https://www.facebook.com/chefclublightandfun/videos/379997909135173/"
+id = "quiche_courgette"
+title = "Quiche Courgette 🥒"
+subtitle = "Un plat de régime pour les quiches"
+video = "https://www.facebook.com/chefclublightandfun/videos/388737968261167/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1525096574/041618_MUFFIN_COURGETTE_LF_spoq12.png"
