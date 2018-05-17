@@ -5,9 +5,33 @@ const Promise = require('bluebird');
 
 module.exports = {
 	add(userId, type) {
-		console.log(userId);
-    let plumes = 0;
     const month = moment().format('MMMM');
+
+		// Create plume records for entering weight and the success
+    return Plume.bulkCreate([{
+			userId: userId,
+      plumes: this.howManyPlumes(type),
+      month,
+      type
+    },{
+			userId: userId,
+			plumes: 1,
+			month,
+			type: 0
+		}]);
+	},
+
+	getPlumesFromMonth(userId, month){
+		return Plume.findAll({
+			where: {
+				userId,
+				month
+			}
+		});
+	},
+
+	howManyPlumes(type){
+		let plumes = 0;
 		switch (type) {
       //enter weight
       case 0:
@@ -37,26 +61,6 @@ module.exports = {
         plumes = 0;
     }
 
-		// Create plume records for entering weight and the success
-    return Plume.bulkCreate([{
-			userId: userId,
-      plumes,
-      month,
-      type
-    },{
-			userId: userId,
-			plumes: 1,
-			month,
-			type: 0
-		}]);
-	},
-
-	getPlumesFromMonth(userId, month){
-		return Plume.findAll({
-			where: {
-				userId,
-				month
-			}
-		});
+		return plumes;
 	}
 };

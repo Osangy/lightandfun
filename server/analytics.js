@@ -59,3 +59,32 @@ exports.incrementWeightTime = (messengerid) => {
   })
 
 }
+
+exports.changePlumes = (messengerid, number) => {
+
+  return new Promise((resolve, reject) => {
+
+    axios.get('https://api.amplitude.com/identify', {
+      params: {
+        api_key: process.env.AMPLITUDE_API_KEY,
+        identification: {
+          user_id: messengerid,
+          user_properties: {
+            "$add": {
+              "plumes": number
+            }
+          }
+        }
+      }
+    })
+    .then((response) => {
+      resolve();
+    })
+    .catch((error) => {
+      console.error(error);
+      reject(error);
+    });
+
+  })
+
+}

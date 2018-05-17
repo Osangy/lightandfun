@@ -15,7 +15,7 @@ const fs = require('fs');
 const Promise = require('bluebird');
 let recipesData;
 
-moment.locale('en');  
+moment.locale('en');
 
 fs.createReadStream('./recipes.toml', 'utf8').pipe(concat(function(data) {
   recipesData = toml.parse(data);
@@ -304,6 +304,8 @@ router.post('/lastweight/:fromMenu', function(req, res) {
   			}
 
         todos.push(plumesController.add(userId, plumeType));
+        const plumesAdded = (1 + plumesController.howManyPlumes(plumeType));
+        todos.push(analytics.changePlumes(userId, plumesAdded));
       }
 
       messages.push({
