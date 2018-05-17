@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const _ = require('lodash');
 const usersController = require('../controllers').users;
+const plumesController = require('../controllers').plumes;
 const weightRecordsController = require('../controllers').weightRecords;
 const utils = require('../../utils');
 const cloudinary = require('cloudinary');
@@ -11,7 +12,10 @@ const moment = require('moment');
 const toml = require('toml');
 const concat = require('concat-stream');
 const fs = require('fs');
+const Promise = require('bluebird');
 let recipesData;
+
+moment.locale('en');  
 
 fs.createReadStream('./recipes.toml', 'utf8').pipe(concat(function(data) {
   recipesData = toml.parse(data);
@@ -157,50 +161,175 @@ router.post('/calories', function(req, res) {
 });
 
 //Get the last weight of the user
-router.post('/lastweight', function(req, res) {
+router.post('/lastweight/:fromMenu', function(req, res) {
 	console.log('lastweight');
 
 	const messengerid = req.body['messenger user id'];
 	const newWeight = req.body['last_weight'];
+  const fromMenu = (req.params == 'true');
+
+  console.log(fromMenu);
 
 	const newWeightFloat = parseFloat(_.replace(newWeight, ',', '.'));
 	let previousWeight;
 	let weight_dif = 0;
   let nb_weight = 0;
 	let next_block = 'flat_weekly';
+  let messages = [];
+  let userId;
 
 	usersController
 		.get(messengerid)
 		.then(user => {
+      userId = user.id;
 			previousWeight = user.weight;
       nb_weight = user.nb_weight + 1;
 			return weightRecordsController.create(user.id, newWeightFloat);
 		})
 		.then(() => usersController.updateWeight(messengerid, newWeightFloat, nb_weight))
 		.then(() => {
-
-
+      let plumeType = -1;
 			let evolution = 'flat';
-			if(!previousWeight){
-				next_block = 'first_weight_reaction';
-				evolution = 'first';
-			}
-			else if (newWeightFloat > previousWeight) {
-				next_block = 'encouragement_weekly';
-				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
-				evolution = 'take_weight';
-			} else if (newWeightFloat < previousWeight) {
-				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
-				next_block = 'happy_weekly';
-				evolution = 'lose_weight'
-			}
-			else {
-				weight_dif = 0;
-				next_block = 'flat_weekly';
-			}
+      let todos = [];
 
-			//Track the event
-			return analytics.send({
+      //The first time the user enters his weight
+      if(!fromMenu){
+        if(!previousWeight){
+  				evolution = 'first';
+          plumeType = 5;
+          messages.push({ text: 'Félicitations, c\'est la première fois que tu rentres ton poids'});
+          messages.push({ text: 'Il est important que tu prennes cette habitude et que tu t\'y tiennes chaque semaine'});
+          messages.push({ text: '😉'});
+          messages.push({ text: 'Pour te féliciter laisse moi t\'offir 1 plume'});
+          messages.push({ attachment : {
+            type: 'image',
+            payload: {
+              url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526372449/landscape-one-plume-tas.gif'
+            }
+          }});
+          messages.push({ text: 'Je compte sur toi pour rentrer ton poids la semaine prochaine et continuer à gagner des plumes !'});
+          messages.push({ text: '😘'});
+  			}
+        //gain more than 300 grams
+  			else if (newWeightFloat > previousWeight + 0.3) {
+  				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
+  				evolution = 'take_weight';
+          plumeType = 4;
+          messages.push({ text: `Aïe, tu as pris ${weight_dif}kg depuis la dernière fois`});
+          messages.push({ text: '😢'});
+          messages.push({ text: 'Je me vois dans l\'obligation de te retirer 3 plumes 😬'});
+          messages.push({ attachment : {
+            type: 'image',
+            payload: {
+              url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526544106/landscape-three-plume-remove.gif'
+            }
+          }});
+          messages.push({ text: 'Allez, c\'est sur tu vas te retraper la semaine prochaine ! Je compte sur toi ! On se voit dans une semaine'});
+          messages.push({ text: '😘'});
+        }
+        //gain less than 300 grams
+        else if (newWeightFloat > previousWeight) {
+  				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
+  				evolution = 'take_weight';
+          plumeType = 3;
+          // messages.push({
+          //   attachment: {
+          //     type: 'template',
+          //     payload: {
+          //       template_type: 'button',
+          //       text: `Oups, ${(weight_dif * 1000)}g en plus cette semaine`,
+          //       buttons: [{
+          //         type: 'web_url',
+          //         url: `${config.client_url}weight/${messengerid}`,
+          //         title: 'Poids évolution 📉',
+          //         webview_height_ratio: 'tall',
+          //         messenger_extensions: 'true'
+          //       }]
+          //     }
+          //   }
+          // });
+          messages.push({ text: `Oups, ${(weight_dif * 1000)}g en plus cette semaine`});
+          messages.push({ text: '😕'});
+          messages.push({ text: 'Allez, je t\'enleve juste 1 plume'});
+          messages.push({ attachment : {
+            type: 'image',
+            payload: {
+              url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526544105/landscape-one-plume-remove.gif'
+            }
+          }});
+          messages.push({ text: 'C\'est juste un petit écart. Ca sera mieux la semaine prochaine. Profite bien de ta semaine'});
+          messages.push({ text: '😘'});
+  			}
+        //loose more than 300 grams
+  			else if (newWeightFloat < previousWeight - 0.3) {
+  				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
+  				evolution = 'lose_weight'
+          plumeType = 2;
+          messages.push({ text: `${weight_dif}kg perdus depuis la dernière fois. Impressionnant !`});
+          messages.push({ text: '😳'});
+          messages.push({ text: 'Tu mérites une belle récompense : voilà 5 plumes pour toi !'});
+          messages.push({ attachment : {
+            type: 'image',
+            payload: {
+              url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526391021/landscape-five-plume-tas.gif'
+            }
+          }});
+          messages.push({ text: 'Tu m\'impressionnes ! Continue tes efforts ! Ca paye ! Bonne journée'});
+          messages.push({ text: '💋'});
+  			}
+        //loose less than 300 grams
+        else if (newWeightFloat < previousWeight) {
+  				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
+  				evolution = 'lose_weight'
+          plumeType = 1;
+          messages.push({ text: `${(weight_dif * 1000)}g perdus depuis la dernière fois. Pas mal !`});
+          messages.push({ text: '👌'});
+          messages.push({ text: 'A chaque effort sa récompense ! Voici 3 plumes !'});
+          messages.push({ attachment : {
+            type: 'image',
+            payload: {
+              url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526391021/landscape-three-plume-tas.gif'
+            }
+          }});
+          messages.push({ text: 'Je suis fière de toi 👩🏻‍🌾. Continue comme ça ! Passe une bonne journée'});
+          messages.push({ text: '💋'});
+  			}
+  			else {
+  				weight_dif = 0;
+  				next_block = 'flat_weekly';
+          messages.push({ text: `Pas d\'évolution cette semaine... Ca sera pour la semaine prochaine !`});
+          messages.push({ text: '💪'});
+          messages.push({ text: 'Tes efforts vont finir par payer ! Passe une bonne journée'});
+          messages.push({ text: '💋'});
+  			}
+
+        todos.push(plumesController.add(userId, plumeType));
+      }
+
+      messages.push({
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `N'oublie pas : consulte quand tu veux ton nombre de plumes ou l'évolution de ton poids depuis le menu ou ici 👇`,
+            buttons: [{
+              type: 'web_url',
+              url: `${config.client_url}plumeviometre/${messengerid}`,
+              title: 'Plumeviomètre ☔️',
+              webview_height_ratio: 'tall',
+              messenger_extensions: 'true'
+            },{
+              type: 'web_url',
+              url: `${config.client_url}weight/${messengerid}`,
+              title: 'Poids évolution 📉',
+              webview_height_ratio: 'tall',
+              messenger_extensions: 'true'
+            }]
+          }
+        }
+      });
+
+      todos.push(analytics.send({
 				messenger_id: messengerid,
 				weight: newWeightFloat,
 				previous_weight: previousWeight,
@@ -209,23 +338,55 @@ router.post('/lastweight', function(req, res) {
 			'new_weight',
 			{
 				weight: newWeight,
-				weight_evolution: evolution
-			});
+				weight_evolution: evolution,
+        from_menu: fromMenu
+			}));
+      todos.push(analytics.incrementWeightTime(messengerid));
 
-		})
-		.then(() =>
-			analytics.incrementWeightTime(messengerid)
-		)
+      return Promise.all(todos);
+    })
+
+    //
+		// 	//Track the event
+		// 	return analytics.send({
+		// 		messenger_id: messengerid,
+		// 		weight: newWeightFloat,
+		// 		previous_weight: previousWeight,
+		// 		last_weight_date: moment()
+		// 	},
+		// 	'new_weight',
+		// 	{
+		// 		weight: newWeight,
+		// 		weight_evolution: evolution,
+    //     from_menu: fromMenu
+		// 	});
+    //
+		// })
+		// .then(() =>
+		// 	analytics.incrementWeightTime(messengerid)
+		// )
 		.then(() => {
 			//Send response to Chatfuel
-			res.json({
-				set_attributes: {
-					weight_dif,
-					previousWeight,
-          nb_weight
-				},
-				redirect_to_blocks: [next_block]
-			});
+      if(fromMenu){
+        res.json({
+  				set_attributes: {
+  					weight_dif,
+  					previousWeight,
+            nb_weight
+  				}
+  			});
+      }
+      else{
+        res.json({
+  				set_attributes: {
+  					weight_dif,
+  					previousWeight,
+            nb_weight
+  				},
+  				messages
+  			});
+      }
+
 		})
 		.catch(err => {
 			console.error(err.message);
@@ -286,6 +447,7 @@ router.post('/frame', function(req, res) {
 				user.size = size;
 				user.age = age;
 				user.weight = weight;
+        user.frame = frame;
 				user.save();
 			}
 
@@ -356,12 +518,12 @@ router.get('/viewchart', function(req, res) {
         "type": "template",
         "payload": {
           "template_type": "button",
-          "text": "Retrouve l'évolution de poids ici 👇",
+          "text": "Retrouve l'évolution de ton poids en cliquant sur ce bouton 👇",
           "buttons": [
             {
               "type": "web_url",
-              "url": `${config.get('client_url')}weight/${messengerid}/goal/${weightGoal}`,
-              "title": "Mon poids 📉"
+              "url": `${config.get('client_url')}weight/${messengerid}`,
+              "title": "Courbe de poids 📉"
             }
           ]
         }

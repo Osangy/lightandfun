@@ -3,12 +3,18 @@ const router = express.Router();
 const _ = require('lodash');
 const usersController = require('../controllers').users;
 const weightRecordsController = require('../controllers').weightRecords;
+const plumesController = require('../controllers').plumes;
 const config = require('config');
 const toml = require('toml');
 var concat = require('concat-stream');
 var fs = require('fs');
 const axios = require('axios');
+const moment = require('moment');
+const utils = require('../../utils');
+const analytics = require('../analytics');
 let recipesData;
+
+moment.locale('en');
 
 fs.createReadStream('./recipes.toml', 'utf8').pipe(concat(function(data) {
   recipesData = toml.parse(data);
@@ -21,13 +27,54 @@ router.use(function(req, res, next) {
   next();
 });
 
-//First time the user arrives
+//Get last 10 weights of a user
 router.get('/weight/:messengerid', function(req, res) {
-  usersController.get(req.params.messengerid).then(user =>
-    weightRecordsController.getLastWeightRecords(user.id, 10)
-  )
-  .then(weightRecords => res.json({ weights: weightRecords.reverse()}))
-  .catch(err => res.status(400).send(err.message))
+  let userWeight;
+
+  analytics.send({
+    messenger_id: req.params.messengerid
+  },
+  'weight_graph',
+  {});
+
+  usersController.get(req.params.messengerid).then(user => {
+    userWeight = utils.calculateIBM(user.size, user.age, user.frame);
+    return weightRecordsController.getLastWeightRecords(user.id, 10);
+  })
+  .then(weightRecords => res.json({ weights: weightRecords.reverse(), user_weight: userWeight}))
+  .catch(err => {
+    console.error(err.message);
+    res.status(400).send(err.message)
+  })
+});
+
+//Get the infos about the plumes of a user
+router.get('/plumeviometre/:messengerid', function(req, res) {
+  let userPlumes;
+  const month =  moment().subtract(0, 'months').format('MMMM');
+  const monthFr = moment().locale('fr').subtract(0, 'months').format('MMMM');;
+  console.log(month);
+
+  usersController.get(req.params.messengerid).then(user => {
+    userPlumes = user.plumes;
+    return plumesController.getPlumesFromMonth(user.id, month);
+  })
+  .then(plumes => {
+    let monthPlumes = 0;
+    plumes.forEach(p => {
+      monthPlumes += p.plumes;
+    });
+    analytics.send({
+  		messenger_id: req.params.messengerid
+  	},
+  	'pluviometre',
+  	{});
+    res.json({ plumes: userPlumes, month_plumes: { month: monthFr, plumes: monthPlumes }})
+  })
+  .catch(err => {
+    console.error(err.message);
+    res.status(400).send(err.message)
+  })
 });
 
 
@@ -67,5 +114,6 @@ router.post('/sendrecipecard', function(req, res) {
     res.status(400).send(err.message)
   })
 });
+
 
 module.exports = router;

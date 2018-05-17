@@ -36,6 +36,14 @@ module.exports = (sequelize, DataTypes) => {
 		nb_weight: {
 			type: DataTypes.INTEGER,
 			default: 0
+		},
+		frame: {
+			type: DataTypes.STRING,
+			default: 'normale'
+		},
+		plumes: {
+			type: DataTypes.INTEGER,
+			default: 0
 		}
 	});
 
