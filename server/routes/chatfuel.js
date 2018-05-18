@@ -224,7 +224,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
               url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526544106/landscape-three-plume-remove.gif'
             }
           }});
-          messages.push({ text: 'Allez, c\'est sur tu vas te retraper la semaine prochaine ! Je compte sur toi ! On se voit dans une semaine'});
+          messages.push({ text: 'Allez, c\'est sur tu vas te rattraper la semaine prochaine ! Je compte sur toi ! On se voit dans une semaine'});
           messages.push({ text: '😘'});
         }
         //gain less than 300 grams
