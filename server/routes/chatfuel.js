@@ -316,7 +316,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
               buttons: [{
                 type: 'web_url',
                 url: `${config.client_url}plumeviometre/${messengerid}`,
-                title: 'Plumeviomètre ☔️',
+                title: 'Plumomètre 📈🐥',
                 webview_height_ratio: 'tall',
                 messenger_extensions: 'true'
               },{
@@ -340,7 +340,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
               buttons: [{
                 type: 'web_url',
                 url: `${config.client_url}plumeviometre/${messengerid}`,
-                title: 'Plumeomètre 📈',
+                title: 'Plumomètre 📈🐥',
                 webview_height_ratio: 'tall',
                 messenger_extensions: 'true'
               },{
