@@ -166,7 +166,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
 
 	const messengerid = req.body['messenger user id'];
 	const newWeight = req.body['last_weight'];
-  const fromMenu = (req.params == 'true');
+  const fromMenu = (req.params.fromMenu == 'true');
 
   console.log(fromMenu);
 
@@ -306,30 +306,58 @@ router.post('/lastweight/:fromMenu', function(req, res) {
         todos.push(plumesController.add(userId, plumeType));
         const plumesAdded = (1 + plumesController.howManyPlumes(plumeType));
         todos.push(analytics.changePlumes(userId, plumesAdded));
+
+        messages.push({
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `N'oublie pas : consulte quand tu veux ton nombre de plumes ou l'évolution de ton poids depuis le menu ou ici 👇`,
+              buttons: [{
+                type: 'web_url',
+                url: `${config.client_url}plumeviometre/${messengerid}`,
+                title: 'Plumeviomètre ☔️',
+                webview_height_ratio: 'tall',
+                messenger_extensions: 'true'
+              },{
+                type: 'web_url',
+                url: `${config.client_url}weight/${messengerid}`,
+                title: 'Poids évolution 📉',
+                webview_height_ratio: 'tall',
+                messenger_extensions: 'true'
+              }]
+            }
+          }
+        });
+      }
+      else {
+        messages.push({
+          attachment: {
+            type: 'template',
+            payload: {
+              template_type: 'button',
+              text: `${newWeightFloat}kg. J'enregistre ça !`,
+              buttons: [{
+                type: 'web_url',
+                url: `${config.client_url}plumeviometre/${messengerid}`,
+                title: 'Plumeomètre 📈',
+                webview_height_ratio: 'tall',
+                messenger_extensions: 'true'
+              },{
+                type: 'web_url',
+                url: `${config.client_url}weight/${messengerid}`,
+                title: 'Poids évolution 📉',
+                webview_height_ratio: 'tall',
+                messenger_extensions: 'true'
+              }]
+            }
+          }
+        });
+        messages.push({ text: 'Par contre pas de plumes quand tu rentres ton poids depuis le menu, mais seulement quand je te le demande chaque semaine.'});
+        messages.push({ text: 'Je voudrais pas que tu te retrouves à rentrer ton poids 10 fois par semaine 😅'});
       }
 
-      messages.push({
-        attachment: {
-          type: 'template',
-          payload: {
-            template_type: 'button',
-            text: `N'oublie pas : consulte quand tu veux ton nombre de plumes ou l'évolution de ton poids depuis le menu ou ici 👇`,
-            buttons: [{
-              type: 'web_url',
-              url: `${config.client_url}plumeviometre/${messengerid}`,
-              title: 'Plumeviomètre ☔️',
-              webview_height_ratio: 'tall',
-              messenger_extensions: 'true'
-            },{
-              type: 'web_url',
-              url: `${config.client_url}weight/${messengerid}`,
-              title: 'Poids évolution 📉',
-              webview_height_ratio: 'tall',
-              messenger_extensions: 'true'
-            }]
-          }
-        }
-      });
+
 
       todos.push(analytics.send({
 				messenger_id: messengerid,
@@ -375,7 +403,8 @@ router.post('/lastweight/:fromMenu', function(req, res) {
   					weight_dif,
   					previousWeight,
             nb_weight
-  				}
+  				},
+          messages
   			});
       }
       else{
