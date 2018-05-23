@@ -213,6 +213,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
         //gain more than 300 grams
   			else if (newWeightFloat > previousWeight + 0.3) {
   				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
+          weight_dif = weight_dif.toFixed(2);
   				evolution = 'take_weight';
           plumeType = 4;
           messages.push({ text: `Aïe, tu as pris ${weight_dif}kg depuis la dernière fois`});
@@ -230,6 +231,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
         //gain less than 300 grams
         else if (newWeightFloat > previousWeight) {
   				weight_dif = (newWeightFloat * 10 - previousWeight * 10) / 10;
+          weight_dif = weight_dif.toFixed(2);
   				evolution = 'take_weight';
           plumeType = 3;
           // messages.push({
@@ -263,6 +265,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
         //loose more than 300 grams
   			else if (newWeightFloat < previousWeight - 0.3) {
   				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
+          weight_dif = weight_dif.toFixed(2);
   				evolution = 'lose_weight'
           plumeType = 2;
           messages.push({ text: `${weight_dif}kg perdus depuis la dernière fois. Impressionnant !`});
@@ -280,6 +283,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
         //loose less than 300 grams
         else if (newWeightFloat < previousWeight) {
   				weight_dif = (previousWeight * 10 - newWeightFloat * 10) / 10;
+          weight_dif = weight_dif.toFixed(2);
   				evolution = 'lose_weight'
           plumeType = 1;
           messages.push({ text: `${(weight_dif * 1000)}g perdus depuis la dernière fois. Pas mal !`});
