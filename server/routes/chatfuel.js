@@ -305,7 +305,7 @@ router.post('/lastweight/:fromMenu', function(req, res) {
 
         todos.push(plumesController.add(userId, plumeType));
         const plumesAdded = (1 + plumesController.howManyPlumes(plumeType));
-        todos.push(analytics.changePlumes(userId, plumesAdded));
+        todos.push(analytics.changePlumes(messengerid, plumesAdded));
 
         messages.push({
           attachment: {
