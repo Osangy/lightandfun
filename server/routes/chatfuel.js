@@ -277,7 +277,20 @@ router.post('/lastweight/:fromMenu', function(req, res) {
               url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526391021/landscape-five-plume-tas.gif'
             }
           }});
-          messages.push({ text: 'Tu m\'impressionnes ! Continue tes efforts ! Ca paye ! Bonne journée'});
+          messages.push({
+            attachment: {
+              type: 'template',
+              payload: {
+                template_type: 'button',
+                text: `Tu m\'impressionnes ! Continue tes efforts ! Ca paye ! Poste une photo, c\'est sympa pour apprécier tes efforts 😉`,
+                buttons: [{
+                  type: 'show_block',
+                  title: 'Poster photo 📷',
+                  block_names: ["weekly_post_photo"]
+                }]
+              }
+            }
+          });
           messages.push({ text: '💋'});
   			}
         //loose less than 300 grams
@@ -295,7 +308,20 @@ router.post('/lastweight/:fromMenu', function(req, res) {
               url: 'http://res.cloudinary.com/dil9tlpjt/image/upload/v1526391021/landscape-three-plume-tas.gif'
             }
           }});
-          messages.push({ text: 'Je suis fière de toi 👩🏻‍🌾. Continue comme ça ! Passe une bonne journée'});
+          messages.push({
+            attachment: {
+              type: 'template',
+              payload: {
+                template_type: 'button',
+                text: `Je suis fière de toi 👩🏻‍🌾. Continue comme ça ! Et poste une photo pour te souvenir de ta progression !`,
+                buttons: [{
+                  type: 'show_block',
+                  title: 'Poster photo 📷',
+                  block_names: ["weekly_post_photo"]
+                }]
+              }
+            }
+          });
           messages.push({ text: '💋'});
   			}
   			else {
