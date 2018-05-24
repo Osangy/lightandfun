@@ -850,4 +850,48 @@ router.get('/gif', (req, res) => {
 	})
 });
 
+// Broadcast everybody about the plumes, and get feedback and give them Plumes
+router.get('/knowplumes', (req, res) => {
+	const messengerid = req.query['messenger user id'];
+  const love_plume = (req.query['love_plume'] == 'true');
+
+
+  usersController.get(messengerid).then(user => {
+    let todos = [];
+    todos.push(analytics.send({
+  		messenger_id: messengerid
+  	},
+  	'love_plume',
+  	{
+      love_plume
+    }));
+    todos.push(plumesController.add(user.id, 0));
+    todos.push(analytics.changePlumes(messengerid, 1));
+
+    return Promise.all(todos);
+  }).then(() => {
+    let messages = [];
+    messages.push({
+      attachment: {
+        type: 'template',
+        payload: {
+          template_type: 'button',
+          text: `Tu peux consulter quand tu veux ton nombre de plumes depuis dans le Plumomètre 📈🐥, depuis ce bouton, ou le menu`,
+          buttons: [{
+            type: 'web_url',
+            url: `${config.client_url}plumeviometre/${messengerid}`,
+            title: 'Plumomètre 📈🐥',
+            webview_height_ratio: 'tall',
+            messenger_extensions: 'true'
+          }]
+        }
+      }
+    });
+
+  	res.json({
+  		messages
+  	});
+  });
+});
+
 module.exports = router;
