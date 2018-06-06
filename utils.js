@@ -89,9 +89,69 @@ function calculateIBM(height, age, frame){
 	return Math.round(ibm);
 }
 
+function calculatePercentiles(data){
+	let percentiles = {};
+
+	// Start by ordering data
+	data.sort();
+
+	const len = data.length;
+
+	// 95 percentile
+	let percentage = 0.95;
+	let nfPercentile = 0.95 * len;
+	if(isInt(nfPercentile)){
+		percentiles.nfPercentile = (data[nfPercentile] + data[nfPercentile])/2;
+	}
+	else{
+		nfPercentile = Math.round(percentage * len);
+		percentiles.nfPercentile = data[nfPercentile];
+	}
+
+	// 90 percentile
+	percentage = 0.90;
+	let nPercentile = percentage * len;
+	if(isInt(nPercentile)){
+		percentiles.nPercentile = (data[nPercentile] + data[nPercentile])/2;
+	}
+	else{
+		nPercentile = Math.round(percentage * len);
+		percentiles.nPercentile = data[nPercentile];
+	}
+
+	// 75 percentile
+	percentage = 0.75;
+	let sfPercentile = 0.75 * len;
+	if(isInt(sfPercentile)){
+		percentiles.sfPercentile = (data[sfPercentile] + data[sfPercentile])/2;
+	}
+	else{
+		sfPercentile = Math.round(percentage * len);
+		percentiles.sfPercentile = data[sfPercentile];
+	}
+
+	// 50 percentile
+	percentage = 0.50;
+	let fPercentile = percentage * len;
+	if(isInt(fPercentile)){
+		percentiles.fPercentile = (data[fPercentile] + data[fPercentile])/2;
+	}
+	else{
+		fPercentile = Math.round(percentage * len);
+		percentiles.fPercentile = data[fPercentile];
+	}
+
+	return percentiles;
+}
+
+function isInt(n){
+	return Number(n) === n && n % 1 === 0;
+}
+
 module.exports = {
 	calculateCalories,
 	calculateLooseCalories,
 	enumActivity,
-	calculateIBM
+	calculateIBM,
+	calculatePercentiles
 };

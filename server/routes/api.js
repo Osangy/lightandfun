@@ -115,5 +115,20 @@ router.post('/sendrecipecard', function(req, res) {
   })
 });
 
+router.get('/sumplumes', function(req, res) {
+  plumesController.getPlumesSumsForMonth('May').then(sums => {
+    let onlySums = [];
+    sums.forEach(sumObj => {
+      onlySums.push(parseInt(sumObj.sum));
+    })
+    console.log(onlySums);
+    res.json({ sums, onlySums, percentile: utils.calculatePercentiles(onlySums) })
+  })
+  .catch(err => {
+    console.error(err.message);
+    res.status(400).send(err.message)
+  });
+});
+
 
 module.exports = router;

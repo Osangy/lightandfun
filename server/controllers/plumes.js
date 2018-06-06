@@ -1,4 +1,5 @@
 const Plume = require('../models').Plume;
+const sequelize = require('../models').sequelize;
 const utils = require('../../utils');
 const moment = require('moment');
 const Promise = require('bluebird');
@@ -62,5 +63,9 @@ module.exports = {
     }
 
 		return plumes;
+	},
+
+	getPlumesSumsForMonth(month){
+		return sequelize.query("SELECT \"userId\", SUM(plumes) FROM \"Plumes\" WHERE month = ? GROUP BY \"userId\"", {replacements: [month],  type: sequelize.QueryTypes.SELECT});
 	}
 };

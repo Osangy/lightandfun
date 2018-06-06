@@ -234,22 +234,6 @@ router.post('/lastweight/:fromMenu', function(req, res) {
           weight_dif = weight_dif.toFixed(2);
   				evolution = 'take_weight';
           plumeType = 3;
-          // messages.push({
-          //   attachment: {
-          //     type: 'template',
-          //     payload: {
-          //       template_type: 'button',
-          //       text: `Oups, ${(weight_dif * 1000)}g en plus cette semaine`,
-          //       buttons: [{
-          //         type: 'web_url',
-          //         url: `${config.client_url}weight/${messengerid}`,
-          //         title: 'Poids évolution 📉',
-          //         webview_height_ratio: 'tall',
-          //         messenger_extensions: 'true'
-          //       }]
-          //     }
-          //   }
-          // });
           messages.push({ text: `Oups, ${(weight_dif * 1000)}g en plus cette semaine`});
           messages.push({ text: '😕'});
           messages.push({ text: 'Allez, je t\'enleve juste 1 plume'});
@@ -405,26 +389,6 @@ router.post('/lastweight/:fromMenu', function(req, res) {
 
       return Promise.all(todos);
     })
-
-    //
-		// 	//Track the event
-		// 	return analytics.send({
-		// 		messenger_id: messengerid,
-		// 		weight: newWeightFloat,
-		// 		previous_weight: previousWeight,
-		// 		last_weight_date: moment()
-		// 	},
-		// 	'new_weight',
-		// 	{
-		// 		weight: newWeight,
-		// 		weight_evolution: evolution,
-    //     from_menu: fromMenu
-		// 	});
-    //
-		// })
-		// .then(() =>
-		// 	analytics.incrementWeightTime(messengerid)
-		// )
 		.then(() => {
 			//Send response to Chatfuel
       if(fromMenu){
