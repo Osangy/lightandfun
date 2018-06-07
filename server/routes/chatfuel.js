@@ -858,4 +858,72 @@ router.get('/knowplumes', (req, res) => {
   });
 });
 
+// Give infos about the plumes of last month
+router.get('/infoplumes', (req, res) => {
+	const messengerid = req.query['messenger user id'];
+  let percentiles = {};
+  let user;
+
+  todos.push(analytics.send({
+    messenger_id: messengerid
+  },
+  'infos_plume',
+  {}));
+
+  //Get the last month and this month
+  const thisMonth =  moment().subtract(0, 'months').format('MMMM');
+  const thisMonthFr = moment().locale('fr').subtract(0, 'months').format('MMMM');
+  const lastMonth =  moment().subtract(1, 'months').format('MMMM');
+  const lastMonthFr = moment().locale('fr').subtract(1, 'months').format('MMMM');
+
+  //get the user
+  usersController.get(messengerid).then(userObj => {
+    user = userObj;
+    //Get the percentiles of last month
+    return plumesController.getPercentilesForMonth(lastMonth)
+  }).then(percentilesObj => {
+    console.log(percentilesObj);
+    percentiles = percentilesObj;
+    //Get the number of plumes for this user for the last month and this month
+    let todos = [];
+    todos.push(plumesController.getSumPlumesForMonth(user.id, lastMonth));
+    todos.push(plumesController.getSumPlumesForMonth(user.id, thisMonth));
+    return Promise.all(todos);
+  }).then(plumes => {
+    const perform = utils.howUserPerformToPercentiles(plumes[0], percentiles);
+    console.log(perform);
+
+    let messages = [];
+    messages.push({ text: `Alors voilà ce que je peux te dire :`});
+    messages.push({ text: `🐤 En ${lastMonthFr}, Tu as gagné ${plumes[0]} plumes`});
+
+    switch (perform) {
+      case "95":
+        messages.push({ text: '💪 Tu as fait mieux que 95% des utilistaurs de Plume'});
+        break;
+      case "90":
+      messages.push({ text: '👍 Tu as fait mieux que 90% des gens qui suivent leur poids avec Plume'});
+        break;
+      case "75":
+        messages.push({ text: '👌 C\'est mieux que les 3/4 des gens qui échangent avec Plume'});
+        break;
+      case "50":
+        messages.push({ text: '😁 C\'est mieux que la moitié des utilistaurs de Plume'});
+        break;
+      case "0":
+        messages.push({ text: '😅 La moitié des utilisateurs de Plume ont fait mieux le mois dernier. Mais on attaque maintenant un nouveau mois, j\'ai confiance en toi 💪'});
+        break;
+      default:
+        messages.push({ text: '😅 La moitié des utilisateurs de Plume ont fait mieux le mois dernier. Mais on attaque maintenant un nouveau mois, j\'ai confiance en toi 💪'});
+    }
+
+    messages.push({ text: `🍄 Pour l'instant ce mois ci tu as récolté ${plumes[1]} plumes`});
+    messages.push({ text: `Et n'oublie pas : tu peux voir à n'importe quel moment ton nombre de plumes depuis le menu : 'Recettes L&F & Mon poids 👉 > Plumomètre 🐥📈'`});
+
+    res.json({
+  		messages
+  	});
+  });
+});
+
 module.exports = router;

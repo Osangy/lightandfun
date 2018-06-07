@@ -101,47 +101,55 @@ function calculatePercentiles(data){
 	let percentage = 0.95;
 	let nfPercentile = 0.95 * len;
 	if(isInt(nfPercentile)){
-		percentiles.nfPercentile = (data[nfPercentile] + data[nfPercentile])/2;
+		percentiles["95"] = (data[nfPercentile] + data[nfPercentile])/2;
 	}
 	else{
 		nfPercentile = Math.round(percentage * len);
-		percentiles.nfPercentile = data[nfPercentile];
+		percentiles["95"] = data[nfPercentile];
 	}
 
 	// 90 percentile
 	percentage = 0.90;
 	let nPercentile = percentage * len;
 	if(isInt(nPercentile)){
-		percentiles.nPercentile = (data[nPercentile] + data[nPercentile])/2;
+		percentiles["90"] = (data[nPercentile] + data[nPercentile])/2;
 	}
 	else{
 		nPercentile = Math.round(percentage * len);
-		percentiles.nPercentile = data[nPercentile];
+		percentiles["90"] = data[nPercentile];
 	}
 
 	// 75 percentile
 	percentage = 0.75;
 	let sfPercentile = 0.75 * len;
 	if(isInt(sfPercentile)){
-		percentiles.sfPercentile = (data[sfPercentile] + data[sfPercentile])/2;
+		percentiles["75"] = (data[sfPercentile] + data[sfPercentile])/2;
 	}
 	else{
 		sfPercentile = Math.round(percentage * len);
-		percentiles.sfPercentile = data[sfPercentile];
+		percentiles["75"] = data[sfPercentile];
 	}
 
 	// 50 percentile
 	percentage = 0.50;
 	let fPercentile = percentage * len;
 	if(isInt(fPercentile)){
-		percentiles.fPercentile = (data[fPercentile] + data[fPercentile])/2;
+		percentiles["50"] = (data[fPercentile] + data[fPercentile])/2;
 	}
 	else{
 		fPercentile = Math.round(percentage * len);
-		percentiles.fPercentile = data[fPercentile];
+		percentiles["50"] = data[fPercentile];
 	}
 
 	return percentiles;
+}
+
+function howUserPerformToPercentiles(nb, percentiles){
+	if(nb > percentiles["95"]) return "95";
+	else if(nb > percentiles["90"]) return "90";
+	else if(nb > percentiles["75"]) return "75";
+	else if(nb > percentiles["50"]) return "50";
+	return "0";
 }
 
 function isInt(n){
@@ -153,5 +161,6 @@ module.exports = {
 	calculateLooseCalories,
 	enumActivity,
 	calculateIBM,
-	calculatePercentiles
+	calculatePercentiles,
+	howUserPerformToPercentiles
 };

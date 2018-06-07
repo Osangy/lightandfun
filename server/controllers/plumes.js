@@ -31,6 +31,16 @@ module.exports = {
 		});
 	},
 
+	getSumPlumesForMonth(userId, month){
+		return new Promise((resolve, reject) => {
+			sequelize.query("SELECT SUM(plumes) FROM \"Plumes\" WHERE month = ? AND \"userId\" = ? GROUP BY \"userId\"", {replacements: [month, userId],  type: sequelize.QueryTypes.SELECT}).then(sums => {
+				if(!sums) reject(new Error("No sum found"))
+				else if(sums.length == 0) resolve(0);
+				else resolve(sums[0].sum);
+			}).catch(err => reject(err));
+		})
+	},
+
 	howManyPlumes(type){
 		let plumes = 0;
 		switch (type) {
@@ -67,5 +77,21 @@ module.exports = {
 
 	getPlumesSumsForMonth(month){
 		return sequelize.query("SELECT \"userId\", SUM(plumes) FROM \"Plumes\" WHERE month = ? GROUP BY \"userId\"", {replacements: [month],  type: sequelize.QueryTypes.SELECT});
+	},
+
+	getPercentilesForMonth(month){
+		return new Promise((resolve, reject) => {
+			this.getPlumesSumsForMonth(month).then(sums => {
+		    let onlySums = [];
+		    sums.forEach(sumObj => {
+		      onlySums.push(parseInt(sumObj.sum));
+		    })
+				console.log(onlySums);
+				resolve(utils.calculatePercentiles(onlySums));
+		  })
+		  .catch(err => {
+				reject(err);
+		  });
+		})
 	}
 };
