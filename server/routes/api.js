@@ -51,25 +51,40 @@ router.get('/weight/:messengerid', function(req, res) {
 //Get the infos about the plumes of a user
 router.get('/plumeviometre/:messengerid', function(req, res) {
   let userPlumes;
-  const month =  moment().subtract(0, 'months').format('MMMM');
-  const monthFr = moment().locale('fr').subtract(0, 'months').format('MMMM');;
-  console.log(month);
+  let user;
+  let plumesThisMonth = 0;
+  let plumesLastMonth = 0;
+  const thisMonth =  moment().subtract(0, 'months').format('MMMM');
+  const thisMonthFr = moment().locale('fr').subtract(0, 'months').format('MMMM');
+  const lastMonth =  moment().subtract(1, 'months').format('MMMM');
+  const lastMonthFr = moment().locale('fr').subtract(1, 'months').format('MMMM');
 
-  usersController.get(req.params.messengerid).then(user => {
+  analytics.send({
+    messenger_id: req.params.messengerid
+  },
+  'pluviometre',
+  {});
+
+  usersController.get(req.params.messengerid).then(userObj => {
+    user = userObj;
     userPlumes = user.plumes;
-    return plumesController.getPlumesFromMonth(user.id, month);
+    return plumesController.getPlumesFromMonth(user.id, thisMonth);
   })
   .then(plumes => {
-    let monthPlumes = 0;
     plumes.forEach(p => {
-      monthPlumes += p.plumes;
+      plumesThisMonth += p.plumes;
     });
-    analytics.send({
-  		messenger_id: req.params.messengerid
-  	},
-  	'pluviometre',
-  	{});
-    res.json({ plumes: userPlumes, month_plumes: { month: monthFr, plumes: monthPlumes }})
+    return plumesController.getPlumesFromMonth(user.id, lastMonth);
+  }).then(plumes => {
+    plumes.forEach(p => {
+      plumesLastMonth += p.plumes;
+    });
+
+    res.json({
+      plumes: userPlumes,
+      this_month_plumes: {month: thisMonthFr, plumes: plumesThisMonth},
+      last_month_plumes: {month: lastMonthFr, plumes: plumesLastMonth}
+    })
   })
   .catch(err => {
     console.error(err.message);
