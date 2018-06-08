@@ -895,11 +895,11 @@ router.get('/infoplumes', (req, res) => {
 
     let messages = [];
     messages.push({ text: `Alors voilà ce que je peux te dire :`});
-    messages.push({ text: `🐤 En ${lastMonthFr}, Tu as gagné ${plumes[0]} plumes`});
+    messages.push({ text: `🐤 En ${lastMonthFr}, tu as gagné ${plumes[0]} plumes`});
 
     switch (perform) {
       case "95":
-        messages.push({ text: '💪 Tu as fait mieux que 95% des utilistaurs de Plume'});
+        messages.push({ text: '💪 Tu as fait mieux que 95% des utilisteurs de Plume'});
         break;
       case "90":
       messages.push({ text: '👍 Tu as fait mieux que 90% des gens qui suivent leur poids avec Plume'});
@@ -918,7 +918,7 @@ router.get('/infoplumes', (req, res) => {
     }
 
     messages.push({ text: `🍄 Pour l'instant ce mois ci tu as récolté ${plumes[1]} plumes`});
-    messages.push({ text: `Et n'oublie pas : tu peux voir à n'importe quel moment ton nombre de plumes depuis le menu : 'Recettes L&F & Mon poids 👉 > Plumomètre 🐥📈'`});
+    messages.push({ text: `Et n'oublie pas : tu peux voir à n'importe quel moment ton nombre de plumes depuis le menu. Va dans 'Recettes L&F & Mon poids 👉 > Plumomètre 🐥📈'`});
 
     res.json({
   		messages
