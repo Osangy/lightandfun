@@ -864,11 +864,11 @@ router.get('/infoplumes', (req, res) => {
   let percentiles = {};
   let user;
 
-  todos.push(analytics.send({
+  analytics.send({
     messenger_id: messengerid
   },
   'infos_plume',
-  {}));
+  {})
 
   //Get the last month and this month
   const thisMonth =  moment().subtract(0, 'months').format('MMMM');
