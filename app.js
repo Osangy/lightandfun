@@ -8,6 +8,7 @@ const chatfuelRouter = require('./server/routes').chatfuel;
 const apiRouter = require('./server/routes').api;
 const cloudinary = require('cloudinary');
 const config = require('config');
+const cron = require('./cron-jobs');
 
 cloudinary.config({
 	cloud_name: config.get('cloudinary.cloud_name'),

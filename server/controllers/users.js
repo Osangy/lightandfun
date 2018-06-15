@@ -1,4 +1,5 @@
 const User = require('../models').User;
+const Op = require('../models').Sequelize.Op;
 const utils = require('../../utils');
 const Promise = require('bluebird');
 
@@ -84,5 +85,15 @@ module.exports = {
 				returning: true
 			}
 		);
+	},
+
+	findUsersIn(ids){
+		return User.findAll({
+			where: {
+				id: {
+					[Op.or] : ids
+				}
+			}
+		})
 	}
 };
