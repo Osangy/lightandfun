@@ -926,4 +926,44 @@ router.get('/infoplumes', (req, res) => {
   });
 });
 
+//Calculate ideal weight of the user depending of its height, its sex and its frame
+router.post('/vegequestion', function(req, res) {
+	console.log('vegequestion');
+
+	const messengerid = req.body['messenger user id'];
+	const response = req.body['response_vegetable'];
+  const vegetable  = req.body['vegetable'];
+
+  let messages = []
+
+  analytics.send({
+    messenger_id: messengerid
+  },
+  'response_vegetable',
+  {
+    vegetable
+  });
+
+  switch (vegetable) {
+    case 'carotte':
+      if(response === '43 cal'){
+        messages.push({ text: '👍 Bien vu ! 100g de carottes t\'apportent en effet 43 calories en valeur énergétique' });
+      }
+      else{
+        messages.push({ text: '😢 Raté ! 100g de carottes c\'est juste 43 calories en valeur énergétique.' });
+      }
+      messages.push({ text: 'Je peux même t\'en apprendre un peu plus sur la carotte :'});
+      messages.push({ text: '💪 Dans les carottes tu retrouveras les vitamines A et C, ainsi que du potassium !'});
+      messages.push({ text: '☀️ La saison idéale des carottes c\'est mai, juin, novembre, ou encore décembre'});
+      messages.push({ text: 'Dépêche toi d\'en manger, et passe un bon week-end 😘'});
+      break;
+    default:
+
+  }
+
+  res.json({
+    messages
+  });
+});
+
 module.exports = router;

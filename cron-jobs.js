@@ -5,7 +5,7 @@ const moment = require('moment');
 const RequestQueue = require('node-request-queue');
 const config = require('config');
 
-var j = schedule.scheduleJob('26 10 * * *', function(){
+var j = schedule.scheduleJob('0 10 2 * *', function(){
 
   const lastMonth =  moment().subtract(1, 'months').format('MMMM');
   let users = [];
