@@ -74,3 +74,10 @@ title = "Quiche tomate farcie 🍅"
 subtitle = "Elle est pas si quiche qu'elle en à l'air 😄"
 video = "https://www.facebook.com/chefclublightandfun/videos/394852200983077/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1526656223/051018_TOMATE_FARCIE_QUICHE_CC_qddbqs.jpg"
+
+[[recipes]]
+id = "gaufre_accras"
+title = "Gaufre accras de cabillaud 🐟"
+subtitle = "Une gaufre régime au goût du large"
+video = "https://www.facebook.com/chefclublightandfun/videos/406572129811084/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1529306666/032018_ACCRAS_GAUFFRE_LF_zu0qb9.png"
