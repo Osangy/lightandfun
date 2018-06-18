@@ -81,3 +81,10 @@ title = "Gaufre accras de cabillaud 🐟"
 subtitle = "Une gaufre régime au goût du large"
 video = "https://www.facebook.com/chefclublightandfun/videos/406572129811084/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1529306666/032018_ACCRAS_GAUFFRE_LF_zu0qb9.png"
+
+[[recipes]]
+id = "sorbets_multicolores"
+title = "Sorbets multicolores 🍦"
+subtitle = "Un régime rafraîchissant"
+video = "https://www.facebook.com/chefclublightandfun/videos/409576276177336/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1529335906/051518_SORBETS_FRUITS_LF_nn46rg.png"
