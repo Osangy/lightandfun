@@ -942,50 +942,56 @@ router.post('/vegequestion', function(req, res) {
   },
   'response_vegetable',
   {
-    vegetable
-  });
-
-  if(response === 'Stop ces messages'){
-    messages.push({ text: 'Ca marche ! Je ne t\'embetterai plus avec ces histoires de fruits et légumes 😉' });
-    want_weekly_fruits = false;
-  }
-  else{
-    switch (vegetable) {
-      case 'carotte':
-        if(response === '43 cal'){
-          messages.push({ text: '👍 Bien vu ! 100g de carottes t\'apportent en effet 43 calories en valeur énergétique' });
-        }
-        else{
-          messages.push({ text: '😢 Raté ! 100g de carottes c\'est juste 43 calories en valeur énergétique.' });
-        }
-        messages.push({ text: 'Je peux même t\'en apprendre un peu plus sur la carotte :'});
-        messages.push({ text: '💪 Dans les carottes tu retrouveras les vitamines A et C, ainsi que du potassium !'});
-        messages.push({ text: '☀️ La saison idéale des carottes c\'est mai, juin, novembre, ou encore décembre'});
-        messages.push({ text: 'Dépêche toi d\'en manger, et passe un bon week-end 😘'});
-        break;
-      case 'season_fruit':
-        if(response === 'Clementine'){
-          messages.push({ text: 'Facile 😉' });
-          messages.push({ text: 'Les mois pendant lesquels la clémentine se consomme sont : janvier, février, novembre et décembre. Quand il fait froid en fait ❄️' });
-        }
-        else{
-          messages.push({ text: 'Et non 😢, la bonne réponse était la clémentine ! C\'est bien la saison des fraises et des cerises !' });
-          messages.push({ text: 'En effet, les mois pendant lesquels la clémentine se consomme sont : janvier, février, novembre et décembre. Quand il fait froid en fait ❄️' });
-        }
-        messages.push({ text: 'Profite des fraises et des cerises tant que c\'est la bonne saison 💋 '});
-      default:
-
+    vegetable,
+    response
+  }).then(() => {
+    if(response === 'Stop ces messages'){
+      messages.push({ text: 'Ca marche ! Je ne t\'embetterai plus avec ces histoires de fruits et légumes 😉' });
+      want_weekly_fruits = false;
     }
-  }
+    else{
+      switch (vegetable) {
+        case 'carotte':
+          if(response === '43 cal'){
+            messages.push({ text: '👍 Bien vu ! 100g de carottes t\'apportent en effet 43 calories en valeur énergétique' });
+          }
+          else{
+            messages.push({ text: '😢 Raté ! 100g de carottes c\'est juste 43 calories en valeur énergétique.' });
+          }
+          messages.push({ text: 'Je peux même t\'en apprendre un peu plus sur la carotte :'});
+          messages.push({ text: '💪 Dans les carottes tu retrouveras les vitamines A et C, ainsi que du potassium !'});
+          messages.push({ text: '☀️ La saison idéale des carottes c\'est mai, juin, novembre, ou encore décembre'});
+          messages.push({ text: 'Dépêche toi d\'en manger, et passe un bon week-end 😘'});
+          break;
+        case 'season_fruit':
+          if(response === 'Clementine'){
+            messages.push({ text: 'Facile 😉' });
+            messages.push({ text: 'Les mois pendant lesquels la clémentine se consomme sont : janvier, février, novembre et décembre. Quand il fait froid en fait ❄️' });
+          }
+          else{
+            messages.push({ text: 'Et non 😢, la bonne réponse était la clémentine ! C\'est bien la saison des fraises et des cerises !' });
+            messages.push({ text: 'En effet, les mois pendant lesquels la clémentine se consomme sont : janvier, février, novembre et décembre. Quand il fait froid en fait ❄️' });
+          }
+          messages.push({ text: 'Profite des fraises et des cerises tant que c\'est la bonne saison 💋 '});
+        default:
+
+      }
+    }
 
 
 
-  res.json({
-    messages,
-    set_attributes: {
-      want_weekly_fruits
-    },
-  });
+    res.json({
+      messages,
+      set_attributes: {
+        want_weekly_fruits
+      },
+    });
+  }).catch(err => {
+    console.error(err.message);
+    res.json({})
+  })
+
+
 });
 
 module.exports = router;
