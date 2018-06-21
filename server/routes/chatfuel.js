@@ -994,4 +994,55 @@ router.post('/vegequestion', function(req, res) {
 
 });
 
+//Calculate ideal weight of the user depending of its height, its sex and its frame
+router.post('/wantwithplumes', function(req, res) {
+	console.log('wantwithplumes');
+
+	const messengerid = req.body['messenger user id'];
+	const response = req.body['want_with_plume'];
+
+  let messages = []
+
+  analytics.send({
+    messenger_id: messengerid
+  },
+  'want_with_plumes',
+  {
+    response
+  }).then(() => {
+    if(response === 'Autre'){
+      messages.push({
+        attachment: {
+          type: 'template',
+          payload: {
+            template_type: 'button',
+            text: `Si tu as autre chose à proposer, je t'invite à cliquer en dessous et à donner ton idée dans le formulaire qui s'ouvrira. Merci d'avance !`,
+            buttons: [{
+              type: 'web_url',
+              url: `https://chefclub.typeform.com/to/V83zgK`,
+              title: 'Répondre',
+              webview_height_ratio: 'tall',
+              messenger_extensions: 'true'
+            }]
+          }
+        }
+      });
+    }
+    else{
+      messages.push({ text: 'Merci pour ta réponse 😘' });
+      messages.push({ text: 'Je vais voir ce que les autres personnes me répondent et je te tiendrai au courant de ce que je peux proposer.' });
+      messages.push({ text: 'Bonne journée !' });
+    }
+
+    res.json({
+      messages
+    });
+  }).catch(err => {
+    console.error(err.message);
+    res.json({})
+  })
+
+
+});
+
 module.exports = router;
