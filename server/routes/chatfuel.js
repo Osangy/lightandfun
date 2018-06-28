@@ -937,6 +937,8 @@ router.post('/vegequestion', function(req, res) {
 
   let messages = []
 
+  console.log(response);
+
   analytics.send({
     messenger_id: messengerid
   },
@@ -946,7 +948,7 @@ router.post('/vegequestion', function(req, res) {
     response
   }).then(() => {
     if(response === 'Stop ces messages'){
-      messages.push({ text: 'Ca marche ! Je ne t\'embetterai plus avec ces histoires de fruits et légumes 😉' });
+      messages.push({ text: 'Ca marche ! Je ne t\'embêterai plus avec ces histoires de fruits et légumes 😉' });
       want_weekly_fruits = false;
     }
     else{
@@ -973,6 +975,19 @@ router.post('/vegequestion', function(req, res) {
             messages.push({ text: 'En effet, les mois pendant lesquels la clémentine se consomme sont : janvier, février, novembre et décembre. Quand il fait froid en fait ❄️' });
           }
           messages.push({ text: 'Profite des fraises et des cerises tant que c\'est la bonne saison 💋 '});
+          break;
+        case 'cal_tom_straw_cherry':
+          if (_.split(response, ' ', 1)[0] === 'Cerises') {
+            messages.push({ text: 'Exact 👍. Ce sont bien les cerises qui sont les plus caloriques' });
+          }
+          else {
+            messages.push({ text: 'Et non !' });
+            messages.push({ text: 'Ce sont les cerises les plus caloriques !' });
+            messages.push({ text: '🍒' });
+          }
+          messages.push({ text: 'Pour 100g de cerises, tu as 50 calories. Alors que dans 100g de tomates tu as 21 calories, et 32 dans 100g de fraises.' });
+          messages.push({ text: 'Profite bien de ces légumes et fruits tant que c\'est la saison, et bonne fin de semaine 💋' });
+          break;
         default:
 
       }
