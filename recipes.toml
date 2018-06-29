@@ -88,3 +88,10 @@ title = "Sorbets multicolores 🍦"
 subtitle = "Un régime rafraîchissant"
 video = "https://www.facebook.com/chefclublightandfun/videos/409576276177336/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1529335906/051518_SORBETS_FRUITS_LF_nn46rg.png"
+
+[[recipes]]
+id = "apero_light"
+title = "3 idées d'apéro light 🍹"
+subtitle = "Pour un été léger "
+video = "https://www.facebook.com/chefclublightandfun/videos/419341998534097/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1530286423/061518_APEROLIGHT_LF_mwh37a.png"
