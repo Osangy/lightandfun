@@ -988,6 +988,18 @@ router.post('/vegequestion', function(req, res) {
           messages.push({ text: 'Pour 100g de cerises, tu as 50 calories. Alors que dans 100g de tomates tu as 21 calories, et 32 dans 100g de fraises.' });
           messages.push({ text: 'Profite bien de ces légumes et fruits tant que c\'est la saison, et bonne fin de semaine 💋' });
           break;
+        case 'intrus_haricot':
+          if(response === 'Betterave') {
+            messages.push({ text: '👌' });
+          }
+          else {
+            messages.push({ text: '😢' });
+            messages.push({ text: 'L\'intrus est la betterave.' });
+          }
+          messages.push({ text: 'La betterave se mange les mois suivants : janvier, février, mars, novembre et décembre' });
+          messages.push({ text: 'Et c\'est la bien la saison des haricots, épinards et brocolis !' });
+          messages.push({ text: 'Passe une bonne journée 😘' });
+          break;
         default:
 
       }
