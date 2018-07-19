@@ -95,3 +95,10 @@ title = "3 idées d'apéro light 🍹"
 subtitle = "Pour un été léger "
 video = "https://www.facebook.com/chefclublightandfun/videos/419341998534097/"
 recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1530286423/061518_APEROLIGHT_LF_mwh37a.png"
+
+[[recipes]]
+id = "tomates_fleurs"
+title = "Tomates fleurs 🍅🌺"
+subtitle = ""
+video = "https://www.facebook.com/chefclublightandfun/videos/436401326828164/"
+recipecard = "http://res.cloudinary.com/dil9tlpjt/image/upload/v1531993106/062618_TOMATES_FARCIES_ROSE_LF_swxscl.png"
